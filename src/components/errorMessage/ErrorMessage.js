@@ -10,6 +10,7 @@ const ErrorMessage = () => {
                 heigth: "100%",
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "center",
+                minHeight: "250px",
             }}
         />
     );

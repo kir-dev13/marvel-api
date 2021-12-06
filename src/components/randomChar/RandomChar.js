@@ -9,10 +9,6 @@ import mjolnir from "../../resources/img/mjolnir.png";
 import "./randomChar.scss";
 
 class RandomChar extends Component {
-    // constructor(props) {
-    //     super(props);
-    // }
-
     state = {
         char: {},
         loading: true,
@@ -33,12 +29,22 @@ class RandomChar extends Component {
         const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
         this.marvelService
             .getCharacter(id)
-            .then(this.onCharLoaded)
-            .catch(this.onError);
+            .then((r) => {
+                this.onCharLoaded(r);
+            })
+            .catch((e) => {
+                console.error(e);
+                this.onError();
+            });
     };
 
     onError = () => {
         this.setState({ loading: false, error: true });
+    };
+
+    onUpdate = () => {
+        this.setState({ loading: true, error: false });
+        this.updateRandomChar();
     };
 
     render() {
@@ -60,7 +66,9 @@ class RandomChar extends Component {
                     </p>
                     <p className="randomchar__title">Or choose another one</p>
                     <button className="button button__main">
-                        <div className="inner">try it</div>
+                        <div className="inner" onClick={this.onUpdate}>
+                            try it
+                        </div>
                     </button>
                     <img
                         src={mjolnir}
@@ -74,7 +82,7 @@ class RandomChar extends Component {
 }
 
 const View = ({ char }) => {
-    const { thumbnail, name, description, homepage, wiki } = char;
+    const { thumbnail, name, description, homepage, wiki, imgStyle } = char;
 
     return (
         <div className="randomchar__block">
@@ -82,6 +90,8 @@ const View = ({ char }) => {
                 src={thumbnail}
                 alt="Random character"
                 className="randomchar__img"
+                style={{ objectFit: `${imgStyle}` }}
+                // style={{ objectFit: `contain` }}
             />
             <div className="randomchar__info">
                 <p className="randomchar__name">{name}</p>

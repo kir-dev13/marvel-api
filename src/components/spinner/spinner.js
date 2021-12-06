@@ -6,6 +6,7 @@ const Spinner = () => {
                 background: "none",
                 display: "block",
                 shapRendering: "auto",
+                textAlign: "center",
             }}
             width="200px"
             height="200px"
