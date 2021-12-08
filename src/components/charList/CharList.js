@@ -11,22 +11,44 @@ class CharList extends Component {
     // }
     marvelService = new MarvelService();
     state = {
+        firstCharNumber: 210,
         chars: [],
-        loading: true,
+        // newChars: [],
+        loading: false,
         error: false,
     };
 
     componentDidMount = () => {
+        this.getChars();
+    };
+
+    getChars = () => {
+        this.setState({ loading: true });
         this.marvelService
-            .getAllCharacters()
+            .getAllCharacters(this.state.firstCharNumber)
             .then((res) => {
                 this.updateChars(res);
             })
+            .then(
+                this.setState(({ firstCharNumber }) => {
+                    return {
+                        firstCharNumber: firstCharNumber + 9,
+                    };
+                })
+            )
             .catch(this.onError);
     };
 
-    updateChars = (chars) => {
-        this.setState({ chars, loading: false });
+    updateChars = (res) => {
+        // console.log(this.state.loading);
+        this.setState(({ chars, loading }) => {
+            return {
+                chars: [...chars, ...res],
+                loading: false,
+            };
+        });
+        // console.log("updated!");
+        // console.log(this.state.loading);
     };
 
     onError = () => {
@@ -66,55 +88,13 @@ class CharList extends Component {
                 {spinner}
                 {content}
                 <button className="button button__main button__long">
-                    <div className="inner">load more</div>
+                    <div className="inner" onClick={this.getChars}>
+                        load more
+                    </div>
                 </button>
             </div>
         );
     }
 }
-
-// const CharCard = (props) => {
-//     const { thumbnail, name, imgStyle, id } = props;
-//     console.log(props.onCharSelected);
-//     return (
-//         <li
-//             className="char__item"
-//             onClick={() => {
-//                 console.log(props.onCharSelected);
-//                 props.onCharSelected(id);
-//             }}
-//         >
-//             <img
-//                 src={thumbnail}
-//                 style={{ objectFit: `${imgStyle}` }}
-//                 alt="abyss"
-//             />
-//             <div className="char__name">{name}</div>
-//         </li>
-//     );
-// };
-
-// const View = (props) => {
-//     const { chars } = props;
-//     const charCards = chars.map((item) => {
-//         const { id, ...itemProps } = item;
-//         return (
-//             <CharCard
-//                 key={id}
-//                 id={id}
-//                 onCharSelected={props.onCharSelected}
-//                 {...itemProps}
-//             />
-//         );
-//     });
-//     return (
-//         <div className="char__list">
-//             <ul className="char__grid">{charCards}</ul>
-//             <button className="button button__main button__long">
-//                 <div className="inner">load more</div>
-//             </button>
-//         </div>
-//     );
-// };
 
 export default CharList;

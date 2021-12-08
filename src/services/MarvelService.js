@@ -17,9 +17,9 @@ class MarvelService {
         return await res.json();
     };
 
-    getAllCharacters = async () => {
+    getAllCharacters = async (firstCharNumber) => {
         const res = await this.getResources(
-            `${this._apiBase}characters?limit=9&offset=210&${this._apiKey}`
+            `${this._apiBase}characters?limit=9&offset=${firstCharNumber}&${this._apiKey}`
         );
 
         return res.data.results.map(this._transformCharacter);
