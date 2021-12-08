@@ -6,49 +6,51 @@ import ErrorMessage from "../errorMessage/ErrorMessage";
 import "./charList.scss";
 
 class CharList extends Component {
-    // constructor(props) {
-    //     super(props);
-    // }
     marvelService = new MarvelService();
     state = {
-        firstCharNumber: 210,
         chars: [],
-        // newChars: [],
-        loading: false,
+        newChars: [],
+        loading: true,
         error: false,
+        newItemLoading: false,
+        offset: 210,
+        charsEnded: false,
     };
 
     componentDidMount = () => {
         this.getChars();
     };
 
-    getChars = () => {
-        this.setState({ loading: true });
+    getChars = (offset) => {
+        console.log(offset);
+        this.onCharListLoading();
         this.marvelService
-            .getAllCharacters(this.state.firstCharNumber)
-            .then((res) => {
-                this.updateChars(res);
+            .getAllCharacters(offset)
+            .then((newChars) => {
+                this.updateChars(newChars);
             })
-            .then(
-                this.setState(({ firstCharNumber }) => {
-                    return {
-                        firstCharNumber: firstCharNumber + 9,
-                    };
-                })
-            )
             .catch(this.onError);
     };
 
-    updateChars = (res) => {
-        // console.log(this.state.loading);
-        this.setState(({ chars, loading }) => {
+    onCharListLoading = () => {
+        this.setState({
+            newItemLoading: true,
+        });
+    };
+
+    updateChars = (newChars) => {
+        if (newChars.length < 9) {
+            this.setState({ charsEnded: true });
+        }
+        this.setState(({ chars, offset }) => {
             return {
-                chars: [...chars, ...res],
+                chars: [...chars, ...newChars],
+                newChars: newChars,
                 loading: false,
+                newItemLoading: false,
+                offset: offset + 9,
             };
         });
-        // console.log("updated!");
-        // console.log(this.state.loading);
     };
 
     onError = () => {
@@ -76,7 +78,15 @@ class CharList extends Component {
     }
 
     render() {
-        const { chars, loading, error } = this.state;
+        const {
+            newItemLoading,
+            offset,
+            chars,
+            newChars,
+            loading,
+            error,
+            charsEnded,
+        } = this.state;
         const items = this.renderItems(chars);
         const spinner = loading ? <Spinner /> : null;
         const errorMessage = error ? <ErrorMessage /> : null;
@@ -87,10 +97,13 @@ class CharList extends Component {
                 {errorMessage}
                 {spinner}
                 {content}
-                <button className="button button__main button__long">
-                    <div className="inner" onClick={this.getChars}>
-                        load more
-                    </div>
+                <button
+                    disabled={newItemLoading}
+                    style={{ display: charsEnded ? "none" : "block" }}
+                    onClick={() => this.getChars(offset)}
+                    className="button button__main button__long"
+                >
+                    <div className="inner">load more</div>
                 </button>
             </div>
         );
