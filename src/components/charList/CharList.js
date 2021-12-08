@@ -78,15 +78,8 @@ class CharList extends Component {
     }
 
     render() {
-        const {
-            newItemLoading,
-            offset,
-            chars,
-            newChars,
-            loading,
-            error,
-            charsEnded,
-        } = this.state;
+        const { newItemLoading, offset, chars, loading, error, charsEnded } =
+            this.state;
         const items = this.renderItems(chars);
         const spinner = loading ? <Spinner /> : null;
         const errorMessage = error ? <ErrorMessage /> : null;
