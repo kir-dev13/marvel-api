@@ -20,10 +20,6 @@ class CharInfo extends Component {
     }
 
     async componentDidUpdate(prevProps) {
-        // console.log(
-        //     "🚀 ~ file: CharInfo.js ~ line 24 ~ CharInfo ~ componentDidUpdate ~ this.props",
-        //     this.props
-        // );
         if (this.props.charId !== prevProps.charId) {
             await this.updateChar();
         }

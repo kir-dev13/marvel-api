@@ -36,7 +36,9 @@ class MarvelService {
         }
         if (
             char.thumbnail.path ===
-            "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available"
+                "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available" ||
+            char.thumbnail.path ===
+                "http://i.annihil.us/u/prod/marvel/i/mg/f/60/4c002e0305708"
         ) {
             imgStyle = "contain";
         }
