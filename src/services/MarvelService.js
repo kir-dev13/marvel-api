@@ -1,35 +1,36 @@
-class MarvelService {
-    _apiBase = "https://gateway.marvel.com:443/v1/public/";
+import { useHttp } from "../hooks/http.hook";
+
+const useMarvelService = () => {
+    const { loading, request, error, clearError } = useHttp();
+
+    const _apiBase = "https://gateway.marvel.com:443/v1/public/";
     // _apiKey = "apikey=3c313190bbec7031c005aebc1502970";
-    _apiKey = "apikey=3c313190bbec7031c005aebc15029707";
-    _baseOffset = 210;
+    const _apiKey = "apikey=3c313190bbec7031c005aebc15029707";
+    const _baseOffset = 210;
+    // getResources = async (url) => {
+    //     let res = await fetch(url);
 
-    getResources = async (url) => {
-        let res = await fetch(url);
+    //     if (!res.ok) {
+    //         throw new Error(`Could not fetch ${url}, status: ${res.status}`);
+    //     }
+    //     return await res.json();
+    // };
 
-        if (!res.ok) {
-            throw new Error(`Could not fetch ${url}, status: ${res.status}`);
-        }
-        return await res.json();
-    };
-
-    getAllCharacters = async (offset = this._baseOffset) => {
-        const res = await this.getResources(
-            `${this._apiBase}characters?limit=9&offset=${offset}&${this._apiKey}`
+    const getAllCharacters = async (offset = _baseOffset) => {
+        const res = await request(
+            `${_apiBase}characters?limit=9&offset=${offset}&${_apiKey}`
         );
 
-        return res.data.results.map(this._transformCharacter);
+        return res.data.results.map(_transformCharacter);
     };
 
-    getCharacter = async (id) => {
-        const res = await this.getResources(
-            `${this._apiBase}characters/${id}?${this._apiKey}`
-        );
+    const getCharacter = async (id) => {
+        const res = await request(`${_apiBase}characters/${id}?${_apiKey}`);
 
-        return await this._transformCharacter(res.data.results[0]);
+        return await _transformCharacter(res.data.results[0]);
     };
 
-    _transformCharacter = (char) => {
+    const _transformCharacter = (char) => {
         let imgStyle = "cover";
         if (!char.description) {
             char.description = "данных нет";
@@ -53,6 +54,8 @@ class MarvelService {
             comics: char.comics.items,
         };
     };
-}
 
-export default MarvelService;
+    return { loading, error, getAllCharacters, getCharacter, clearError };
+};
+
+export default useMarvelService;

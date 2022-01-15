@@ -1,60 +1,34 @@
 import { Component, useState, useEffect } from "react";
 
-import MarvelService from "../../services/MarvelService";
+import useMarvelService from "../../services/MarvelService";
 import Spinner from "../spinner/spinner";
 import ErrorMessage from "../errorMessage/ErrorMessage";
-// import thor from "../../resources/img/thor.jpeg";
 import mjolnir from "../../resources/img/mjolnir.png";
 
 import "./randomChar.scss";
 
 const RandomChar = () => {
-    // state = {
-    //     char: {},
-    //     loading: true,
-    //     error: false,
-    // };
     const [char, setChar] = useState({});
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
 
-    const marvelService = new MarvelService();
+    const { loading, error, getCharacter, clearError } = useMarvelService();
 
-    // componentDidMount = () => {
-    //     this.updateRandomChar();
-    // };
     useEffect(() => {
         updateRandomChar();
     }, []);
 
     const onCharLoaded = (char) => {
-        // this.setState({ char, loading: false });
         setChar(char);
-        setLoading(false);
     };
 
     const updateRandomChar = () => {
+        clearError();
         const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
-        marvelService
-            .getCharacter(id)
-            .then((r) => {
-                onCharLoaded(r);
-            })
-            .catch((e) => {
-                console.error(e);
-                onError();
-            });
-    };
-
-    const onError = () => {
-        setLoading(false);
-        setError(true);
+        getCharacter(id).then((r) => {
+            onCharLoaded(r);
+        });
     };
 
     const onUpdate = () => {
-        // this.setState({ loading: true, error: false });
-        setLoading(true);
-        setError(false);
         updateRandomChar();
     };
 
@@ -99,7 +73,6 @@ const View = ({ char }) => {
                 alt="Random character"
                 className="randomchar__img"
                 style={{ objectFit: `${imgStyle}` }}
-                // style={{ objectFit: `contain` }}
             />
             <div className="randomchar__info">
                 <p className="randomchar__name">{name}</p>

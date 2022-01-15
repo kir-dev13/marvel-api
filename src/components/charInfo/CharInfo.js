@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import MarvelService from "../../services/MarvelService";
+import useMarvelService from "../../services/MarvelService";
 import Spinner from "../spinner/spinner";
 import ErrorMessage from "../errorMessage/ErrorMessage";
 import Skeleton from "../skeleton/Skeleton";
@@ -7,26 +7,10 @@ import Skeleton from "../skeleton/Skeleton";
 import "./charInfo.scss";
 
 const CharInfo = (props) => {
-    // state = {
-    //     char: null,
-    //     loading: false,
-    //     error: false,
-    // };
     const [char, setChar] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(false);
 
-    const marvelService = new MarvelService();
+    const { loading, error, getCharacter, clearError } = useMarvelService();
 
-    // componentDidMount() {
-    //     this.updateChar();
-    // }
-
-    // async componentDidUpdate(prevProps) {
-    //     if (this.props.charId !== prevProps.charId) {
-    //         await this.updateChar();
-    //     }
-    // }
     useEffect(() => {
         updateChar();
     }, [props.charId]);
@@ -36,34 +20,14 @@ const CharInfo = (props) => {
         if (!charId) {
             return;
         }
-        onCharLoading();
-        marvelService
-            .getCharacter(charId)
-
-            .then((r) => {
-                onCharLoaded(r);
-            })
-            .catch((r) => onError(r));
+        clearError();
+        getCharacter(charId).then((r) => {
+            onCharLoaded(r);
+        });
     };
 
     const onCharLoaded = (char) => {
-        // setState({ char, loading: false });
         setChar(char);
-        setLoading(false);
-    };
-
-    const onCharLoading = () => {
-        // setState({ loading: true, error: false });
-        setLoading(true);
-        setError(false);
-    };
-
-    const onError = (e, r) => {
-        console.log(e);
-        console.log(r);
-        // setState({ loading: false, error: true });
-        setLoading(false);
-        setError(true);
     };
 
     const skeleton = char || loading || error ? null : <Skeleton />;
