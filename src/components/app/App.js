@@ -8,6 +8,9 @@ import ErrorBoundary from "../errorBoundary/ErrorBoundary";
 
 import decoration from "../../resources/img/vision.png";
 
+import Banner from "../Comics/banner/banner";
+import ComicsDashboard from "../Comics/comicsDashboard/comicsDashboard";
+
 const App = () => {
     const [selectedChar, setSelectedChar] = useState(null);
 
@@ -19,14 +22,16 @@ const App = () => {
         <div className="app">
             <AppHeader />
             <main>
-                <RandomChar />
+                {/* <RandomChar />
                 <div className="char__content">
                     <CharList onCharSelected={onCharSelected} />
                     <ErrorBoundary>
                         <CharInfo charId={selectedChar} />
                     </ErrorBoundary>
                 </div>
-                <img className="bg-decoration" src={decoration} alt="vision" />
+                <img className="bg-decoration" src={decoration} alt="vision" /> */}
+                <Banner />
+                <ComicsDashboard />
             </main>
         </div>
     );
