@@ -1,16 +1,23 @@
 import "./comicsCard.sass";
 
 const ComicsCard = (props) => {
-    const { imgSrc = "", name = "название", price = "член" } = props;
+    const {
+        imgSrc = "",
+        title = "нет данных",
+        price = "нет данных",
+        details = "",
+    } = props;
+    console.log("card");
+
     return (
-        <div className="card">
+        <a href={details} target="_blank" className="card">
             <img src={imgSrc} alt="" />
             <span>
-                <b>{name}</b>
+                <b>{title}</b>
             </span>
             <br />
             <span>{price}</span>
-        </div>
+        </a>
     );
 };
 

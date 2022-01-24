@@ -1,33 +1,63 @@
+import { useEffect, useState } from "react";
+import useMarvelService from "../../../services/MarvelService";
+
 import ComicsCard from "../comicsCard/comicsCard";
+import Spinner from "../../spinner/spinner";
+import ErrorMessage from "../../errorMessage/ErrorMessage";
 
 import "./comicsDashboard.sass";
 
-const dataArray = [
-    { imgSrc: "", name: "жопочлен1", price: "10" },
-    { imgSrc: "", name: "жопочлен2", price: "20" },
-    { imgSrc: "", name: "жопочлен3", price: "30" },
-    { imgSrc: "", name: "жопочлен4", price: "40" },
-    { imgSrc: "", name: "жопочлен5", price: "50" },
-    { imgSrc: "", name: "жопочлен6", price: "60" },
-    { imgSrc: "", name: "жопочлен7", price: "70" },
-    { imgSrc: "", name: "жопочлен8", price: "80" },
-];
-
 const ComicsDashboard = () => {
+    const { loading, error, getComics } = useMarvelService();
+    const [comics, setComics] = useState([]);
+    const [newItemLoading, setNewItemloading] = useState(false);
+    const [offset, setOffset] = useState(210);
+    const [comicssEnded, setComicssEnded] = useState(false);
+
+    //!! закэшировать запрос!
+    //!! Поймать ошибку и вывести статус
+    //!! сделать ховер
+    //!! максимально осознать useHttp
+
+    useEffect(() => {
+        updateComics();
+    }, []);
+
+    const updateComics = () => {
+        //второй параметр по умолчанию false. При первой загрузке стоит true
+        getComics(offset, true).then((data) => {
+            console.log(data);
+            setComics([...comics, ...data]);
+            setOffset((offset) => offset + 8);
+        });
+    };
+
+    const spinner = loading ? <Spinner /> : null;
+    const errorMessage = error ? <ErrorMessage /> : null;
+
+    console.log("Comics");
+
     return (
         <>
             <ul className="comicsDashboard">
-                {dataArray.map((data) => {
+                {comics.map((comic) => {
                     return (
                         <ComicsCard
-                            imgSrc={data.imgSrc}
-                            name={data.name}
-                            price={data.price}
+                            key={comic.id}
+                            imgSrc={`${comic.images[0].path}.${comic.images[0].extension}`}
+                            title={comic.title}
+                            price={comic.prices[0].price}
+                            details={comic.urls[0].url}
                         />
                     );
                 })}
             </ul>
-            <button className="button button__main button__long">
+            {spinner}
+            {errorMessage}
+            <button
+                onClick={updateComics}
+                className="button button__main button__long"
+            >
                 <div className="inner">load more</div>
             </button>
         </>

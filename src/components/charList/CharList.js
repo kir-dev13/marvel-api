@@ -82,6 +82,7 @@ const CharList = (props) => {
 
     return (
         <div className="char__list">
+            {console.log("%cCharList", "color:pink")}
             {errorMessage}
             {spinner}
             {items}

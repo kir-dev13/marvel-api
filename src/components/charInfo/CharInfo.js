@@ -39,6 +39,7 @@ const CharInfo = (props) => {
 
     return (
         <div className="char__info">
+            {console.log("%cCharInfo", "color:green")}
             {skeleton}
             {spinner}
             {errorMessage}

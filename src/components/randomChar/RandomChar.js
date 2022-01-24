@@ -38,6 +38,7 @@ const RandomChar = () => {
 
     return (
         <div className="randomchar">
+            {console.log("%crandom char", "color:red")}
             {spinner}
             {errorMessage}
             {content}
