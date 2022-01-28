@@ -44,10 +44,11 @@ const ComicsDashboard = () => {
                     return (
                         <ComicsCard
                             key={comic.id}
-                            imgSrc={`${comic.images[0].path}.${comic.images[0].extension}`}
+                            id={comic.id}
+                            imgSrc={`${comic.images[0]?.path}.${comic.images[0]?.extension}`}
                             title={comic.title}
                             price={comic.prices[0].price}
-                            details={comic.urls[0].url}
+                            // details={comic.urls[0].url}
                         />
                     );
                 })}
