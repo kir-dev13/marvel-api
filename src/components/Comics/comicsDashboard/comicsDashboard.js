@@ -26,7 +26,7 @@ const ComicsDashboard = () => {
     const updateComics = () => {
         //второй параметр по умолчанию false. При первой загрузке стоит true
         getComics(offset, true).then((data) => {
-            console.log(data);
+            // console.log(data);
             setComics([...comics, ...data]);
             setOffset((offset) => offset + 8);
         });
@@ -35,7 +35,7 @@ const ComicsDashboard = () => {
     const spinner = loading ? <Spinner /> : null;
     const errorMessage = error ? <ErrorMessage /> : null;
 
-    console.log("Comics");
+    // console.log("Comics");
 
     return (
         <>

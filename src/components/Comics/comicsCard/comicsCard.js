@@ -9,7 +9,7 @@ const ComicsCard = (props) => {
         // details = "",
         id,
     } = props;
-    console.log("card");
+    // console.log("card");
 
     return (
         <Link

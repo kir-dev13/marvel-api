@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, memo } from "react";
 import useMarvelService from "../../services/MarvelService";
 import Spinner from "../spinner/spinner";
 import ErrorMessage from "../errorMessage/ErrorMessage";
@@ -11,12 +11,24 @@ const CharList = (props) => {
     const [chars, setChars] = useState([]);
     // const [newChars, setNewChars] = useState([]);
     const [newItemLoading, setNewItemLoading] = useState(false);
-    const [offset, setOffset] = useState(210);
+    const [offset, setOffset] = useState(props.offset);
     const [charsEnded, setCharsEnded] = useState(false);
 
-    useEffect(() => getChars(offset, true), []);
+    useEffect(() => {
+        if (props.charsLoaded.length === 0) {
+            getChars(offset, true);
+        } else {
+            setChars(props.charsLoaded);
+        }
+
+        return () => {
+            console.log("chars: ", chars);
+        };
+    }, []);
 
     const getChars = (offset, initial = false) => {
+        console.log("fetching chars....");
+
         initial ? setNewItemLoading(false) : setNewItemLoading(true);
         getAllCharacters(offset).then((newChars) => {
             updateChars(newChars);
@@ -28,9 +40,12 @@ const CharList = (props) => {
             setCharsEnded(true);
         }
         setChars((chars) => [...chars, ...newChars]);
+        setOffset((offset) => offset + 9);
+
+        props.updateCharsLoaded([...chars, ...newChars]);
+        props.updateOffsetGlobal(props.offset + 9);
         // setNewChars(newChars);
         setNewItemLoading(false);
-        setOffset((offset) => offset + 9);
     };
 
     const itemRefs = useRef([]);
@@ -43,7 +58,7 @@ const CharList = (props) => {
         itemRefs.current[id].focus();
     };
 
-    const renderItems = (arr) => {
+    const RenderItems = ({ arr }) => {
         const items = arr.map((item, i) => {
             return (
                 <li
@@ -75,17 +90,19 @@ const CharList = (props) => {
         return <ul className="char__grid">{items}</ul>;
     };
 
-    const items = renderItems(chars);
+    // const items = renderItems(chars);
     const spinner = loading && !newItemLoading ? <Spinner /> : null;
     const errorMessage = error ? <ErrorMessage /> : null;
     // const content = !(loading || error) ? items : null;
 
     return (
         <div className="char__list">
-            {console.log("%cCharList", "color:pink")}
+            {/* {console.log("%cCharList", "color:pink")} */}
             {errorMessage}
             {spinner}
-            {items}
+            {/* {items}
+            < */}
+            <RenderItems arr={chars} />
             <button
                 disabled={newItemLoading}
                 style={{ display: charsEnded ? "none" : "block" }}

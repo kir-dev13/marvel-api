@@ -6,7 +6,7 @@ import ErrorBoundary from "../components/errorBoundary/ErrorBoundary";
 
 import decoration from "../resources/img/vision.png";
 
-const MainPage = () => {
+const MainPage = (props) => {
     const [selectedChar, setSelectedChar] = useState(null);
 
     const onCharSelected = (id) => {
@@ -17,7 +17,13 @@ const MainPage = () => {
         <>
             <RandomChar />
             <div className="char__content">
-                <CharList onCharSelected={onCharSelected} />
+                <CharList
+                    charsLoaded={props.charsLoaded}
+                    updateCharsLoaded={props.updateCharsLoaded}
+                    onCharSelected={onCharSelected}
+                    updateOffsetGlobal={props.updateOffsetGlobal}
+                    offset={props.offset}
+                />
                 <ErrorBoundary>
                     <CharInfo charId={selectedChar} />
                 </ErrorBoundary>
